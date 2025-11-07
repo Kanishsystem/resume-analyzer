@@ -7,10 +7,7 @@ import plotly.graph_objects as go
 
 st.set_page_config(page_title="Resume Analyzer", page_icon="📄", layout="wide")
 
-# st.title("📄 Resume Analyzer using Streamlit")
-# st.write("Upload your resume to get instant feedback and improvement suggestions!")
 
-# Custom CSS
 st.markdown("""
     <style>
     .center { display: flex; justify-content: center; align-items: center; flex-direction: column; }
@@ -41,7 +38,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Company Logo + Title
+
 with st.container():
     st.markdown('<div class="center">', unsafe_allow_html=True)
     logo = Image.open("logo.png")
@@ -54,26 +51,6 @@ uploaded_file = st.file_uploader("Upload Resume (PDF/DOCX)", type=["pdf", "docx"
                                  
                                  accept_multiple_files=True)
 
-# if uploaded_file:
-   
-#     resume_text = extract_text(uploaded_file)
-
-#     if resume_text:
-#         st.subheader("Resume Preview")
-#         st.text_area("Extracted Text", resume_text[:1000] + "..." if len(resume_text) > 1000 else resume_text, height=200)
-
-        
-#         result = analyze_resume(resume_text)
-
-#         st.subheader("📊 Resume Analysis Report")
-#         st.metric("Validation Score", f"{result['score']}%")
-#         st.progress(result['score'] / 100)
-
-#         st.write("### 🧠 Improvement Suggestions")
-#         for key in result["improvements"]:
-#             st.write(f"- {key}")
-#     else:
-#         st.error("Could not extract text from the resume. Please upload a valid file.")
 
 if uploaded_file:
     all_text = ""
@@ -91,8 +68,9 @@ if uploaded_file:
         result = analyze_resume(all_text)
 
         st.subheader("📊 Resume Analysis Report")
-        st.metric("Validation Score", f"{result['score']}%")
-        st.progress(result['score'] / 100)
+        st.metric("Detected Stream", result["stream"])
+        st.metric("Validation Score", f"{result['total']}%")
+        st.progress(result['total'] / 100)
 
         st.subheader("📈 Resume Section Completeness")
 
@@ -105,7 +83,7 @@ if uploaded_file:
         100 if "project" in all_text.lower() else 0
         ]
 
-# Create a colorful bar chart
+
         fig = go.Figure(data=[
             go.Bar(
                 x=sections,
@@ -126,8 +104,8 @@ if uploaded_file:
         st.plotly_chart(fig, use_container_width=True)
 
 
-        st.write("### 🧠 Improvement Suggestions")
-        for key in result["improvements"]:
+        st.write("### 🧠 Suggestions for Improvement")
+        for key in result["suggestions"]:
             st.write(f"- {key}")
     else:
         st.error("Could not extract text from the uploaded files. Please check formats.")
