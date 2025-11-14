@@ -155,3 +155,20 @@ if uploaded_file:
 
     else:
         st.error("🚫 No valid resumes could be processed. Please upload a proper PDF or DOCX file.")
+else:
+    # st.subheader("Download PDF Example")
+    st.markdown(
+    "<h4 style='font-size:20px; font-weight:600;'>Download Sample Resume</h4>",
+    unsafe_allow_html=True
+    )
+
+    # Open the file in binary mode
+    with open("files/model_resume.pdf", "rb") as pdf_file:
+        PDF_BYTE = pdf_file.read()
+
+    st.download_button(
+        label="📥 Model Resume",
+        data=PDF_BYTE,
+        file_name="model_resume.pdf",
+        mime="application/pdf"
+    )
